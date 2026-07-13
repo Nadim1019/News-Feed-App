@@ -1,0 +1,56 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../change_notifiers/feed_notifier.dart';
+
+class FeedScreen extends StatefulWidget {
+  final FeedNotifier notifier;
+
+  const FeedScreen({super.key, required this.notifier});
+
+  @override
+  State<FeedScreen> createState() => _FeedScreenState();
+}
+
+class _FeedScreenState extends State<FeedScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.notifier.loadPosts();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('News Feed')),
+      body: ListenableBuilder(
+        listenable: widget.notifier,
+        builder: (context, _) {
+          if (widget.notifier.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (widget.notifier.errorMessage != null) {
+            return Center(child: Text(widget.notifier.errorMessage!));
+          }
+
+          return ListView.builder(
+            itemCount: widget.notifier.posts.length,
+            itemBuilder: (context, index) {
+              final post = widget.notifier.posts[index];
+              return ListTile(
+                title: Text(post.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+                subtitle: Text(post.body, maxLines: 2, overflow: TextOverflow.ellipsis),
+                onTap: () {
+                  context.push(
+                    '/post/${post.id}',
+                    extra: {'title': post.title, 'body': post.body},
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
