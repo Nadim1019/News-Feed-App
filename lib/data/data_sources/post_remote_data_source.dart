@@ -15,4 +15,21 @@ class PostRemoteDataSource {
       throw Exception('Failed to load posts from server: $e');
     }
   }
+  // POST: Create a new post
+  Future<PostModel> createPost(PostModel post) async {
+    final response = await dio.post('https://jsonplaceholder.typicode.com/posts', data: post.toJson());
+    return PostModel.fromJson(response.data);
+  }
+
+// PUT: Replace an entire existing post
+  Future<PostModel> updatePost(int id, PostModel post) async {
+    final response = await dio.put('https://jsonplaceholder.typicode.com/posts/$id', data: post.toJson());
+    return PostModel.fromJson(response.data);
+  }
+
+// PATCH: Update only specific parts of a post
+  Future<PostModel> patchPost(int id, Map<String, dynamic> data) async {
+    final response = await dio.patch('https://jsonplaceholder.typicode.com/posts/$id', data: data);
+    return PostModel.fromJson(response.data);
+  }
 }

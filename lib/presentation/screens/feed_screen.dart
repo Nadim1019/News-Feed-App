@@ -51,6 +51,38 @@ class _FeedScreenState extends State<FeedScreen> {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              final titleController = TextEditingController();
+              final bodyController = TextEditingController();
+
+              return AlertDialog(
+                title: const Text('Create New Post'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
+                    TextField(controller: bodyController, decoration: const InputDecoration(labelText: 'Body')),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      widget.notifier.addPost(titleController.text, bodyController.text);
+                      context.pop(); // go_router way to close the dialog
+                    },
+                    child: const Text('Post'),
+                  )
+                ],
+              );
+            },
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

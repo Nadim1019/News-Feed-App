@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../data/data_sources/post_remote_data_source.dart';
 import '../data/repositories/post_repository_impl.dart';
 import '../domain/use_cases/get_posts_usecase.dart';
+import '../domain/use_cases/create_post_usecase.dart'; // Added this import
 import '../presentation/change_notifiers/feed_notifier.dart';
 import '../presentation/screens/feed_screen.dart';
 import '../presentation/screens/detail_screen.dart';
@@ -11,7 +12,8 @@ final Dio dio = Dio();
 final PostRemoteDataSource dataSource = PostRemoteDataSource(dio);
 final PostRepositoryImpl repository = PostRepositoryImpl(dataSource);
 final GetPostsUseCase getPostsUseCase = GetPostsUseCase(repository);
-final FeedNotifier feedNotifier = FeedNotifier(getPostsUseCase);
+final CreatePostUseCase createPostUseCase = CreatePostUseCase(repository); // Added this instance
+final FeedNotifier feedNotifier = FeedNotifier(getPostsUseCase, createPostUseCase); // Updated this line
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
